@@ -1,0 +1,43 @@
+
+if @?pdbid eq 0     set pdbid = kid
+if @?openmm eq 0    set openmm = 0
+
+read  rtf card name top-idpcg-sasa.inp
+read para card name hb2.0.inp
+
+read psf card name @pdbid.psf
+read coor pdb name @pdbid.pdb
+
+! DH electrostatoc potential
+! --------------------------
+nbond inbfrq -1
+NBOND atom switch cdie vdw vswitch -
+      cutnb 20.0 ctofnb 18.0 ctonnb 16.0
+
+! pulling force
+! --------------------------
+pull off
+pull force 0.1 xdir 0.0 ydir 0.0 zdir 1.0 select type CA end
+pull list
+
+! NVE simulation
+!-------------------------------------------------------
+set nstep = 100000
+! 1) CPU
+if openmm eq 0 then
+   energy
+   dynamics leap start timestep 0.002 nstep @nstep -
+         inbfrq -1 -
+         ilbfrq 1000 nprint 1000
+
+endif
+
+! 2) CUDA
+if openmm eq 1 then
+   omm platform CUDA precision mixed deviceid 0
+   omm on
+   energy
+   dynamics leap start timestep 0.002 nstep @nstep -
+         ilbfrq 1000 nprint 1000
+endif
+

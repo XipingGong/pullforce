@@ -1,0 +1,40 @@
+
+if @?pdbid eq 0     set pdbid = kid
+
+read  rtf card name top-idpcg-sasa.inp
+read para card name hb2.0.inp
+
+read psf card name @pdbid.psf
+read coor pdb name @pdbid.pdb
+
+! DH electrostatoc potential
+! --------------------------
+nbond inbfrq -1
+NBOND atom switch cdie vdw vswitch -
+      cutnb 20.0 ctofnb 18.0 ctonnb 16.0
+
+! pulling force
+! --------------------------
+pull off
+pull force 1.0 xdir 0.0 ydir 0.0 zdir 1.0 select type CA end
+!pull list
+
+! energy and forces
+! ---------------------
+set natom = ?natom
+! 1) CPU
+energy 
+! or omm platform CPU precision mixed deviceid 0
+! omm on
+! energy
+coor force comp
+print coor comp sele bynu 1:@natom end
+! 2) CUDA
+omm platform CUDA precision mixed deviceid 0
+omm on
+energy
+coor force comp
+print coor comp sele bynu 1:@natom end
+
+stop
+
