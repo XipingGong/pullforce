@@ -23,7 +23,7 @@ pull force 1.0 xdir 0.0 ydir 0.0 zdir 1.0 select type CA end
 ! ---------------------
 set natom = ?natom
 ! 1) CPU
-energy 
+energy
 ! or omm platform CPU precision mixed deviceid 0
 ! omm on
 ! energy
