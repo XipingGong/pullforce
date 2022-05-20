@@ -33,8 +33,12 @@ mpirun='/home/ping/programs/openmpi/openmpi-3.0.0/build/bin/mpirun'
 
 # run simulations
 # ---------------
-$CHARMM -i ener.inp > ener.out   # charmm is an executable program
-grep ' KID  ' ener.out | awk '{print $1, $5, $6, $7}' | head -181 > forces.cpu.dat # natom = 181
-grep ' KID  ' ener.out | awk '{print $1, $5, $6, $7}' | tail -181 > forces.gpu.dat
+$CHARMM qpullforce=0 -i ener.inp > ener.out   # charmm is an executable program
+grep ' KID  ' ener.out | awk '{print $1, $5, $6, $7}' | head -181 > forces0.cpu.dat # natom = 181
+grep ' KID  ' ener.out | awk '{print $1, $5, $6, $7}' | tail -181 > forces0.gpu.dat
+
+$CHARMM qpullforce=1 -i ener.inp > ener.out   # charmm is an executable program
+grep ' KID  ' ener.out | awk '{print $1, $5, $6, $7}' | head -181 > forces1.cpu.dat # natom = 181
+grep ' KID  ' ener.out | awk '{print $1, $5, $6, $7}' | tail -181 > forces1.gpu.dat
 
 wait

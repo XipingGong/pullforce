@@ -23,10 +23,11 @@ pull list
 ! NVE simulation
 !-------------------------------------------------------
 set nstep = 100000
+set dt = 0.001
 ! 1) CPU
 if openmm eq 0 then
    energy
-   dynamics leap start timestep 0.002 nstep @nstep -
+   dynamics leap start timestep @dt nstep @nstep -
          inbfrq -1 -
          ilbfrq 1000 nprint 1000
 
@@ -37,7 +38,7 @@ if openmm eq 1 then
    omm platform CUDA precision mixed deviceid 0
    omm on
    energy
-   dynamics leap start timestep 0.002 nstep @nstep -
+   dynamics leap start timestep @dt nstep @nstep -
          ilbfrq 1000 nprint 1000
 endif
 

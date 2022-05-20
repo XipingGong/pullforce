@@ -1,5 +1,6 @@
 
-if @?pdbid eq 0     set pdbid = kid
+if @?pdbid eq 0       set pdbid = kid
+if @?qpullforce eq 0  set qpullforce = 0
 
 read  rtf card name top-idpcg-sasa.inp
 read para card name hb2.0.inp
@@ -15,9 +16,11 @@ NBOND atom switch cdie vdw vswitch -
 
 ! pulling force
 ! --------------------------
-pull off
-pull force 1.0 xdir 0.0 ydir 0.0 zdir 1.0 select type CA end
-!pull list
+if qpullforce eq 0 then
+   pull off
+   pull force 1.0 xdir 0.0 ydir 0.0 zdir 1.0 select type CA end
+  !pull list
+endif
 
 ! energy and forces
 ! ---------------------
